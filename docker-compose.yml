@@ -15,7 +15,7 @@ services:
       - messengersystem
 
   api:
-    image: ghcr.io/wollbro/php-main-image:latest
+    image: ghcr.io/wollbro/php-mongodb-main-image:latest
     restart: always
     expose:
       - 9000
@@ -26,7 +26,7 @@ services:
       - messengersystem
 
   tools:
-    image: ghcr.io/wollbro/php-tool-image:latest
+    image: ghcr.io/wollbro/php-mongodb-tool-image:latest
     restart: always
     volumes:
       - ./app/api:/api

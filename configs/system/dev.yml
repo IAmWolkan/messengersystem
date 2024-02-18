@@ -1,2 +1,5 @@
 logger:
   name: "ms.api"
+
+db:
+  connection: "mongodb://root:root@mongo:27017/"

@@ -1,0 +1,66 @@
+version: "3.7"
+
+services:
+  nginx:
+    image: nginx:1.25.3
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./app/api:/api
+      - ./app/dashboard:/dashboard
+      - ./configs/nginx:/etc/nginx/conf.d:ro
+    networks:
+      - messengersystem
+
+  api:
+    image: ghcr.io/wollbro/php-main-image:latest
+    restart: always
+    expose:
+      - 9000
+    volumes:
+      - ./app/api:/api
+      - ./configs/system/dev.yml:/api/config.yml:ro
+    networks:
+      - messengersystem
+
+  tools:
+    image: ghcr.io/wollbro/php-tool-image:latest
+    restart: always
+    volumes:
+      - ./app/api:/api
+      - ./configs/system/dev.yml:/api/config.yml:ro
+    networks:
+      - messengersystem
+
+  mongo:
+    image: mongo:7.0.5-jammy
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - db:/data/db
+    networks:
+      - messengersystem
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_BASICAUTH_USERNAME: root
+      ME_CONFIG_BASICAUTH_PASSWORD: root
+      ME_CONFIG_MONGODB_URL: mongodb://root:root@mongo:27017/
+    networks:
+      - messengersystem
+
+volumes:
+  db:
+
+networks:
+  messengersystem:
